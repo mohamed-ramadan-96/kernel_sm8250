@@ -5989,7 +5989,6 @@ CONFIG_KSU_HEURISTIC_IN_TREE_BUILD=y
 #
 # Extra Features (enable as needed)
 #
-CONFIG_NTSYNC=y
-# CONFIG_NOMOUNT is not set
+# CONFIG_NOMOUNT=y
 # CONFIG_RW_SWAPPINESS is not set
 # CONFIG_BYPASS_CHARGING is not set
