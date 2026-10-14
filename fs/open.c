@@ -37,6 +37,7 @@
 
 #include "internal.h"
 #include <trace/hooks/syscall_check.h>
+extern int filename_lookup(int dfd, struct filename *name, unsigned flags, struct path *path, struct path *root);
 
 int do_truncate2(struct vfsmount *mnt, struct dentry *dentry, loff_t length,
 		unsigned int time_attrs, struct file *filp)
