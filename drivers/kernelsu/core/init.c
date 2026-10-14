@@ -141,11 +141,9 @@ static inline void __exit ksu_hook_exit(void)
 void setup_ksu_cred(void)
 {
     setup_ksu_cred_selinux();
-    if (init_session_keyring == NULL) {
-        init_session_keyring = ksu_get_session_keyring(current_cred());
-    }
-
+#ifdef KSU_COMPAT_REQUIRE_SESSION_KEYRING
     setup_ksu_cred_session_keyring();
+#endif
 }
 
 #ifdef CONFIG_KSU_DEBUG
@@ -269,7 +267,7 @@ int __init kernelsu_init(void)
         ksu_file_wrapper_init();
 
         ksu_boot_completed = true;
-        track_throne(TRACK_THRONE_FORCE_SYNCHRONOUS);
+        track_throne(TRACK_THRONE_FORCE_SEARCH_MGR | TRACK_THRONE_FORCE_SYNCHRONOUS);
 
         if (!getenforce()) {
             pr_info("Permissive SELinux, enforcing\n");
