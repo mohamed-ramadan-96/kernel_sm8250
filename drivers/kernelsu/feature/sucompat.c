@@ -241,7 +241,7 @@ static long ksu_handle_execve_sucompat_common_internal(const char __user **filen
     struct file *ksud_file;
     const struct cred *old_cred;
 
-    if (execveat && ((int)PT_REGS_PARM1(regs) != AT_FDCWD || (int)PT_REGS_PARM5(regs) != 0))
+    if (execveat && ((int)PT_REGS_SYSCALL_PARM1(regs) != AT_FDCWD || (int)PT_REGS_PARM5(regs) != 0))
         goto do_orig_execve;
 
     if (unlikely(!filename_user))
@@ -286,7 +286,7 @@ static long ksu_handle_execve_sucompat_common_internal(const char __user **filen
     pending_sucompat = ksu_sulog_capture_sucompat_tracepoint(*filename_user, argv_user, GFP_KERNEL);
     // execve(file, argv, environ)
     // execveat(fd, file, argv, environ, flags)
-    orig_regs[0] = regs->__PT_PARM1_REG;
+    orig_regs[0] = PT_REGS_SYSCALL_PARM1(regs);
     orig_regs[1] = regs->__PT_PARM2_REG;
     orig_regs[2] = regs->__PT_PARM3_REG;
     orig_regs[3] = regs->__PT_SYSCALL_PARM4_REG;
@@ -295,7 +295,7 @@ static long ksu_handle_execve_sucompat_common_internal(const char __user **filen
     regs->__PT_SYSCALL_PARM4_REG = envp;
     regs->__PT_PARM3_REG = (unsigned long)argv_user;
     regs->__PT_PARM2_REG = empty_user_path();
-    regs->__PT_PARM1_REG = tmp_fd;
+    PT_REGS_SYSCALL_PARM1(regs) = tmp_fd;
 
     ret = escape_with_root_profile();
     if (ret) {
@@ -306,7 +306,7 @@ static long ksu_handle_execve_sucompat_common_internal(const char __user **filen
     ret = ksu_syscall_table[__NR_execveat](regs);
     if (ret < 0) {
         ksu_close_fd(tmp_fd);
-        regs->__PT_PARM1_REG = orig_regs[0];
+        PT_REGS_SYSCALL_PARM1(regs) = orig_regs[0];
         regs->__PT_PARM2_REG = orig_regs[1];
         regs->__PT_PARM3_REG = orig_regs[2];
         regs->__PT_SYSCALL_PARM4_REG = orig_regs[3];
@@ -384,22 +384,17 @@ static inline int do_ksu_handle_execveat_sucompat(int *fd, const char *filename,
     memcpy((void *)filename, ksud_path, sizeof(ksud_path));
 out:
     ksu_sulog_emit_pending(pending_sucompat, 0, GFP_KERNEL);
-#ifdef CONFIG_KSU_MANUAL_HOOK
-    // flag for post execve hook, mostly: bprm_committed_creds LSM hooks
-    // no need care in susfs, susfs completed everything
+    // always flag that, to avoid old version of susfs hang in boot
     set_thread_flag(TIF_PROC_IN_KSU_EXECVE);
-#endif
     return 0;
 }
 
 // fd, filename, argv, envp, flags and retval were NOT provided in bprm_committed_creds (KSU_COMPAT_NO_POST_EXECVE_HOOK)!
 int ksu_handle_post_execve(int *fd, const char *filename, void *argv, void *envp, int *flags, int *retval)
 {
-#ifdef CONFIG_KSU_MANUAL_HOOK
     if (likely(!test_thread_flag(TIF_PROC_IN_KSU_EXECVE))) {
         return -EINVAL;
     }
-#endif
 #ifndef KSU_COMPAT_HAS_SUSFS_INSTALL_SU_FD_DIRECT_CALL
     ksu_install_su_fd();
 #endif
