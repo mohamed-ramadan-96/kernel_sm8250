@@ -454,7 +454,7 @@ static int dump_masked_av_helper(void *k, void *d, void *args)
 	return 0;
 }
 
-static void security_dump_masked_av(struct policydb *policydb,
+void security_dump_masked_av(struct policydb *policydb,
 				    struct context *scontext,
 				    struct context *tcontext,
 				    u16 tclass,
@@ -3813,3 +3813,4 @@ int security_read_policy(struct selinux_state *state,
 	return 0;
 
 }
+EXPORT_SYMBOL(security_dump_masked_av);
