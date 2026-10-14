@@ -94,7 +94,7 @@ static int context_struct_to_string(struct policydb *policydb,
 				    char **scontext,
 				    u32 *scontext_len);
 
-static void context_struct_compute_av(struct policydb *policydb,
+void context_struct_compute_av(struct policydb *policydb,
 				      struct context *scontext,
 				      struct context *tcontext,
 				      u16 tclass,
@@ -619,7 +619,7 @@ void services_compute_xperms_drivers(
  * Compute access vectors and extended permissions based on a context
  * structure pair for the permissions in a particular class.
  */
-static void context_struct_compute_av(struct policydb *policydb,
+void context_struct_compute_av(struct policydb *policydb,
 				      struct context *scontext,
 				      struct context *tcontext,
 				      u16 tclass,
@@ -3814,3 +3814,4 @@ int security_read_policy(struct selinux_state *state,
 
 }
 EXPORT_SYMBOL(security_dump_masked_av);
+EXPORT_SYMBOL(context_struct_compute_av);
