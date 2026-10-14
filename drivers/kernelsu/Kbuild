@@ -73,13 +73,13 @@ include $(KSU_SRC)/tools/ddk_compatible.mk
 endif
 
 $(shell cd $(KSU_SRC); [ -f ../.git/shallow ] && $(GIT_BIN) fetch --unshallow)
-KSU_LOCAL_VERSION := 4429
+KSU_LOCAL_VERSION := 4471
 KSU_VERSION := $(shell expr 30000 + $(KSU_LOCAL_VERSION) + 700)
 
-KSU_TAG_NAME := v4.2.0-rc1
-KSU_COMMIT_SHA := 246d3e52
+KSU_TAG_NAME := v4.2.0-rc3
+KSU_COMMIT_SHA := 239e1e88
 ifneq ($(shell cd $(KSU_SRC); $(GIT_BIN) diff-index --quiet HEAD; echo $$?),0)
-KSU_COMMIT_SHA := 246d3e52
+KSU_COMMIT_SHA := 239e1e88
 endif
 KSU_BRANCH_NAME := $(shell cd $(KSU_SRC); $(GIT_BIN) branch --show-current 2>/dev/null || echo "unknown")
 
@@ -111,6 +111,10 @@ KERNEL_TYPE := GKI 1.0
 endif
 else
 KERNEL_TYPE := GKI 2.0
+endif
+
+ifneq ($(shell test $(VERSION) -ge 4; echo $$?),0)
+KERNEL_TYPE := Non-GKI (Legacy)
 endif
 $(info -- KERNEL_VERSION: $(KERNEL_VERSION))
 $(info -- KERNEL_TYPE: $(KERNEL_TYPE))
