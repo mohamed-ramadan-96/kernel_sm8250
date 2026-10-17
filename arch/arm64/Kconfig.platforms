@@ -450,11 +450,6 @@ config BOARD_ALIOTH
 	help
 	  This enables support for Xiaomi Redmi K40 / POCO F3
 
-config BOARD_APOLLO
-	bool "Apollo and Apollopro platform"
-	select BOARD_XIAOMI_SM8250
-	help
-	  This enables support for Xiaomi MI 10T/Pro / Redmi K30S
 
 config BOARD_CAS
 	bool "Cas platform"
@@ -492,11 +487,6 @@ config BOARD_LMI
 	help
 	  This enables support for Xiaomi Redmi K30 Pro / POCO F2 Pro.
 
-config BOARD_MUNCH
-	bool "munch platform"
-	select BOARD_XIAOMI_SM8250
-	help
-	  This enables support for Xiaomi Redmi K40S / POCO F4.
 
 config BOARD_THYME
 	bool "Thyme platform"
