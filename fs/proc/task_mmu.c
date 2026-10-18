@@ -24,9 +24,6 @@
 #include <asm/tlb.h>
 #include <asm/tlbflush.h>
 #include "internal.h"
-#ifdef CONFIG_KSU_SUSFS_SUS_MAP
-#include <linux/susfs_def.h>
-#endif
 
 #define SEQ_PUT_DEC(str, val) \
 		seq_put_decimal_ull_width(m, str, (val) << (PAGE_SHIFT-10), 8)
@@ -1650,17 +1647,7 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
 		ret = down_read_killable(&mm->mmap_sem);
 		if (ret)
 			goto out_free;
-#ifdef CONFIG_KSU_SUSFS_SUS_MAP
-		{
-			struct vm_area_struct *vma = find_vma(mm, start_vaddr);
-			if (vma && vma->vm_file && SUSFS_IS_INODE_SUS_MAP(file_inode(vma->vm_file)))
-				goto bypass_orig_flow;
-		}
-#endif
 		ret = walk_page_range(mm, start_vaddr, end, &pagemap_ops, &pm);
-#ifdef CONFIG_KSU_SUSFS_SUS_MAP
-bypass_orig_flow:
-#endif
 		up_read(&mm->mmap_sem);
 		start_vaddr = end;
 
