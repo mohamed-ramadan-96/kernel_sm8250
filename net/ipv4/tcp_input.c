@@ -3655,9 +3655,9 @@ static void tcp_process_tlp_ack(struct sock *sk, u32 ack, int flag)
 		/* This DSACK means original and TLP probe arrived; no loss */
 		tp->tlp_high_seq = 0;
 	} else if (after(ack, tp->tlp_high_seq)) {
-		/* ACK advances: there was a loss, so reduce cwnd. Reset
-		 * tlp_high_seq in tcp_init_cwnd_reduction()
-		 */
+		/* ACK advances: the TLP probe repaired a lost segment. */
+		tcp_ca_event(sk, CA_EVENT_TLP_RECOVERY);
+		/* Reduce cwnd. Reset tlp_high_seq in tcp_init_cwnd_reduction(). */
 		tcp_init_cwnd_reduction(sk);
 		tcp_set_ca_state(sk, TCP_CA_CWR);
 		tcp_end_cwnd_reduction(sk);
