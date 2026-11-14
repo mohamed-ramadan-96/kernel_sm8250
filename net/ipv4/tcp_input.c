@@ -3760,6 +3760,7 @@ static int tcp_ack(struct sock *sk, const struct sk_buff *skb, int flag)
 
 	prior_fack = tcp_is_sack(tp) ? tcp_highest_sack_seq(tp) : tp->snd_una;
 	rs.prior_in_flight = tcp_packets_in_flight(tp);
+	rs.is_ece = (flag & FLAG_ECE) != 0;
 
 	/* ts_recent update must be made after we are sure that the packet
 	 * is in window.
