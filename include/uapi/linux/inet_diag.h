@@ -188,13 +188,35 @@ struct tcp_dctcp_info {
 
 /* INET_DIAG_BBRINFO */
 
+enum tcp_bbr_phase {
+	BBR_PHASE_INVALID		= 0,
+	BBR_PHASE_STARTUP		= 1,
+	BBR_PHASE_DRAIN			= 2,
+	BBR_PHASE_PROBE_BW_UP		= 3,
+	BBR_PHASE_PROBE_BW_DOWN		= 4,
+	BBR_PHASE_PROBE_BW_CRUISE	= 5,
+	BBR_PHASE_PROBE_BW_REFILL	= 6,
+	BBR_PHASE_PROBE_RTT		= 7,
+};
+
 struct tcp_bbr_info {
 	/* u64 bw: max-filtered BW (app throughput) estimate in Byte per sec: */
-	__u32	bbr_bw_lo;		/* lower 32 bits of bw */
-	__u32	bbr_bw_hi;		/* upper 32 bits of bw */
-	__u32	bbr_min_rtt;		/* min-filtered RTT in uSec */
-	__u32	bbr_pacing_gain;	/* pacing gain shifted left 8 bits */
-	__u32	bbr_cwnd_gain;		/* cwnd gain shifted left 8 bits */
+	__u32	bbr_bw_lo;
+	__u32	bbr_bw_hi;
+	__u32	bbr_min_rtt;
+	__u32	bbr_pacing_gain;
+	__u32	bbr_cwnd_gain;
+	__u32	bbr_bw_hi_lsb;
+	__u32	bbr_bw_hi_msb;
+	__u32	bbr_bw_lo_lsb;
+	__u32	bbr_bw_lo_msb;
+	__u8	bbr_mode;
+	__u8	bbr_phase;
+	__u8	bbr_version;
+	__u8	bbr_unused;
+	__u32	bbr_inflight_lo;
+	__u32	bbr_inflight_hi;
+	__u32	bbr_extra_acked;
 };
 
 union tcp_cc_info {
