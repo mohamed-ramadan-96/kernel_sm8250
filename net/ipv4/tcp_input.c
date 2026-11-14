@@ -3308,7 +3308,7 @@ static int tcp_clean_rtx_queue(struct sock *sk, u32 prior_fack,
 		seq_rtt_us = tcp_stamp_us_delta(tp->tcp_mstamp, first_ackt);
 		ca_rtt_us = tcp_stamp_us_delta(tp->tcp_mstamp, last_ackt);
 
-		if (pkts_acked == 1 && last_in_flight < tp->mss_cache &&
+		if (pkts_acked == 1 && last_in_flight == 1 &&
 		    last_in_flight && !prior_sacked && fully_acked &&
 		    sack->rate->prior_delivered + 1 == tp->delivered &&
 		    !(flag & (FLAG_CA_ALERT | FLAG_SYN_ACKED))) {

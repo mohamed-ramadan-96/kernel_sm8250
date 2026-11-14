@@ -1080,6 +1080,7 @@ struct rate_sample {
 	u32 tx_in_flight;	/* packets in flight at starting timestamp */
 	s32  lost;		/* number of packets lost over interval */
 	s32  delivered;		/* number of packets delivered over interval */
+	s32  delivered_ce;	/* number of CE-marked packets delivered */
 	long interval_us;	/* time for tp->delivered to incr "delivered" */
 	u32 snd_interval_us;	/* snd interval for delivered packets */
 	u32 rcv_interval_us;	/* rcv interval for delivered packets */

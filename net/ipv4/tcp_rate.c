@@ -161,6 +161,7 @@ void tcp_rate_gen(struct sock *sk, u32 delivered, u32 lost,
 	}
 	rs->delivered   = tp->delivered - rs->prior_delivered;
 	rs->lost        = tp->lost - rs->prior_lost;
+	rs->delivered_ce = rs->is_ece ? delivered : 0;
 
 	/* Model sending data and receiving ACKs as separate pipeline phases
 	 * for a window. Usually the ACK phase is longer, but with ACK
