@@ -3779,6 +3779,7 @@ static int tcp_ack(struct sock *sk, const struct sk_buff *skb, int flag)
 	rs.is_ece = (flag & FLAG_ECE) != 0;
 	rs.is_acking_tlp_retrans_seq = tcp_has_tlp_probe(tp) &&
 		(ack == tp->tlp_high_seq);
+	tcp_rate_check_app_limited(sk);
 
 	/* ts_recent update must be made after we are sure that the packet
 	 * is in window.
